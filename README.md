@@ -17,6 +17,17 @@ To work with this repository, ensure you have the following tools installed:
 - [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) for interacting with Azure resources. Make sure you are logged in using `az login`.
 
 
+## Shared Infrastructure
+
+The resources defined in this repository are intended to be shared among multiple microservices. Currently, the following resources are provisioned:
+- TODO: List shared resources here.
+
+
+## Usage of Provisioned Resources by Microservices
+
+TODO: Describe how microservices can utilize the shared infrastructure resources. Also provide config examples.
+
+
 ## Remote State Initialization
 
 Terraform keeps track of the state of your infrastructure in a state file. To collaborate effectively and ensure consistency, it's best to store this state file remotely, where all team members and CI/CD systems can access it. The [`init-remote-backend.sh`](./scripts/init-remote-backend.sh) script automates the setup of an Azure Storage Account and Container to hold the Terraform state file. It also generates an initial Terraform configuration file with the necessary backend settings.

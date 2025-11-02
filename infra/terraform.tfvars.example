@@ -1,0 +1,7 @@
+# General resource settings
+resource_group_name = "rso-dev-rg"
+location            = "Germany West Central"
+
+# Container registry
+acr_name = "rsobingusiacr"
+acr_sku  = "Basic"
