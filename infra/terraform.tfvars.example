@@ -5,3 +5,10 @@ location            = "Germany West Central"
 # Container registry
 acr_name = "rsobingusiacr"
 acr_sku  = "Basic"
+
+# Postgres flexible server
+pg_name       = "rsobingusipg"
+pg_version    = "16"
+pg_sku        = "B_Standard_B1ms"
+pg_storage_mb = 32768
+pg_location   = "Switzerland North"

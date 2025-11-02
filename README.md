@@ -46,3 +46,16 @@ To use the script, follow the steps below:
 4. Upon successful execution, the script will create the required Azure resources and generate a Terraform configuration file with the backend settings.
 
 > **Note:** The remote state only needs to be initialized once, before provisioning infrastructure for the project. This has already been done for this project, so the script does not need to be run again unless you want to set up a new remote backend.
+
+
+## TODO
+
+- [x] Script for initializing the remote backend and documentation of its usage.
+- [x] Root module for infrastructure provisioning
+- [ ] Implementation of modules for provisioning shared resources.
+  - [x] Azure Container Registry
+  - [x] Azure PostgreSQL Flexible Server
+  - [ ] Azure Kubernetes Service
+- [ ] Mechanism for microservices to access shared resources, such as a Key Vault.
+- [ ] Documentation on how microservices can utilize the shared infrastructure.
+- [ ] CI/CD pipeline for automated infrastructure provisioning and updates.
