@@ -39,6 +39,13 @@ resource "azurerm_kubernetes_cluster" "this" {
     name       = var.node_pool_name
     vm_size    = var.node_vm_size
     node_count = var.node_count
+
+    # Explicitly set default upgrade settings to prevent circular diff
+    upgrade_settings {
+      max_surge                     = "10%"
+      drain_timeout_in_minutes      = 0
+      node_soak_duration_in_minutes = 0
+    }
   }
 
   identity {

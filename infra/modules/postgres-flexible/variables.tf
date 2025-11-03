@@ -34,6 +34,12 @@ variable "storage_tier" {
   type        = string
 }
 
+variable "zone" {
+  description = "The availability zone for the PostgreSQL flexible server. Defaults to '1' as opposed to null to avoid circular differences in plans."
+  default     = "1"
+  type        = string
+}
+
 variable "administrator_login" {
   description = "Username of the administrator. If not specified, a random username will be generated."
   type        = string

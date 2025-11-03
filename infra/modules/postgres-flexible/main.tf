@@ -33,6 +33,7 @@ resource "azurerm_postgresql_flexible_server" "this" {
   sku_name               = var.sku
   storage_mb             = var.storage_mb
   storage_tier           = var.storage_tier
+  zone                   = var.zone
   administrator_login    = coalesce(var.administrator_login, random_pet.login.id)
   administrator_password = coalesce(var.administrator_password, random_password.login.result)
 }
