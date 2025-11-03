@@ -30,3 +30,18 @@ module "kubernetes" {
     module.acr.id
   ]
 }
+
+# Store information on resources in Key Vault, where other microservices can access them
+module "keyvault" {
+  source              = "./modules/keyvault"
+  name                = var.keyvault_name
+  resource_group_name = var.resource_group_name
+  location            = var.location
+  secrets = {
+    "acr-login-server"  = module.acr.login_server
+    "pg-fqdn"           = module.postgres.fqdn
+    "pg-admin-username" = module.postgres.administrator_login
+    "pg-admin-password" = module.postgres.administrator_password
+    "aks-kube-config"   = module.kubernetes.kube_config
+  }
+}

@@ -17,3 +17,6 @@ pg_location   = "Switzerland North"
 aks_name = "rsobingusiaks"
 aks_node_count = 1
 aks_node_vm_size = "Standard_B2pls_v2"
+
+# Key Vault
+keyvault_name = "rsobingusivault"

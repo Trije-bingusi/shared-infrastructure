@@ -68,3 +68,9 @@ variable "aks_node_vm_size" {
   type        = string
   default     = "Standard_B2pls_v2"
 }
+
+# Key Vault for centralized access to resources
+variable "keyvault_name" {
+  description = "Name of the Azure Key Vault to store shared resource information."
+  type        = string
+}

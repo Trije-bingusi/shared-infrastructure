@@ -17,12 +17,20 @@ To work with this repository, ensure you have the following tools installed:
 - [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) for interacting with Azure resources. Make sure you are logged in using `az login`.
 
 
-## Shared Infrastructure
+## Provisioned Resources
 
 The resources defined in this repository are intended to be shared among multiple microservices. Currently, the following resources are provisioned:
 - [Azure PostgreSQL Flexible Server](./infra/modules/postgres-flexible/): A managed PostgreSQL database service for microservices.
 - [Azure Container Registry (ACR)](./infra/modules/acr/): A private container registry for storing Docker images used by microservices.
 - [Azure Kubernetes Service (AKS)](./infra/modules/aks/): A managed Kubernetes cluster for deploying and managing containerized microservices. A role is also assigned to allow the AKS cluster to pull images from the ACR.
+- [Azure Key Vault](./infra/modules/keyvault/): A secure vault for storing secrets, keys, and certificates that microservices can use to access provisioned resources, such as database credentials.
+
+Details on how microservices can access the provisioned resources are provided in the [Usage of Provisioned Resources by Microservices](#usage-of-provisioned-resources-by-microservices) section below.
+
+
+## Deploying and Destroying Resources
+
+TODO: Provide instructions on how to deploy/destroy the infrastructure using Terraform commands.
 
 
 ## Usage of Provisioned Resources by Microservices
@@ -31,6 +39,8 @@ TODO: Describe how microservices can utilize the shared infrastructure resources
 
 
 ## Remote State Initialization
+
+> **Note:** The remote state only needs to be initialized once, before provisioning infrastructure for the project. This has already been done for this project, so the script does not need to be run again unless you want to set up a new remote backend.
 
 Terraform keeps track of the state of your infrastructure in a state file. To collaborate effectively and ensure consistency, it's best to store this state file remotely, where all team members and CI/CD systems can access it. The [`init-remote-backend.sh`](./scripts/init-remote-backend.sh) script automates the setup of an Azure Storage Account and Container to hold the Terraform state file. It also generates an initial Terraform configuration file with the necessary backend settings.
 
@@ -47,8 +57,6 @@ To use the script, follow the steps below:
    ```
 4. Upon successful execution, the script will create the required Azure resources and generate a Terraform configuration file with the backend settings.
 
-> **Note:** The remote state only needs to be initialized once, before provisioning infrastructure for the project. This has already been done for this project, so the script does not need to be run again unless you want to set up a new remote backend.
-
 
 ## TODO
 
@@ -58,6 +66,6 @@ To use the script, follow the steps below:
   - [x] Azure Container Registry
   - [x] Azure PostgreSQL Flexible Server
   - [x] Azure Kubernetes Service
-- [ ] Mechanism for microservices to access shared resources, such as a Key Vault.
+- [x] Mechanism for microservices to access shared resources, such as a Key Vault.
 - [ ] Documentation on how microservices can utilize the shared infrastructure.
 - [ ] CI/CD pipeline for automated infrastructure provisioning and updates.
