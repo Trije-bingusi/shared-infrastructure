@@ -36,5 +36,5 @@ resource "azurerm_key_vault_secret" "this" {
   name         = each.key
   value        = each.value
   key_vault_id = azurerm_key_vault.this.id
-  depends_on   = [azurerm_key_vault.this]
+  depends_on   = [azurerm_role_assignment.this]
 }
