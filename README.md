@@ -28,14 +28,20 @@ The resources defined in this repository are intended to be shared among multipl
 Details on how microservices can access the provisioned resources are provided in the [Usage of Provisioned Resources by Microservices](#usage-of-provisioned-resources-by-microservices) section below.
 
 
-## Deploying and Destroying Resources
+## Deploying Resources
 
-TODO: Provide instructions on how to deploy/destroy the infrastructure using Terraform commands.
+To deploy the infrastructure to Azure, follow these steps.
+```sh
+cd infra          # Navigate to the infra directory
+terraform init    # Initialize Terraform
+terraform plan    # Optionally review the planned changes to the infrastructure
+terraform apply   # Apply the changes
+```
 
 
 ## Usage of Provisioned Resources by Microservices
 
-TODO: Describe how microservices can utilize the shared infrastructure resources. Also provide config examples.
+TODO: Describe how microservices can utilize the shared infrastructure resources.
 
 
 ## Remote State Initialization
@@ -56,16 +62,3 @@ To use the script, follow the steps below:
    ./scripts/init-remote-backend.sh [output_file.tf]
    ```
 4. Upon successful execution, the script will create the required Azure resources and generate a Terraform configuration file with the backend settings.
-
-
-## TODO
-
-- [x] Script for initializing the remote backend and documentation of its usage.
-- [x] Root module for infrastructure provisioning
-- [x] Implementation of modules for provisioning shared resources.
-  - [x] Azure Container Registry
-  - [x] Azure PostgreSQL Flexible Server
-  - [x] Azure Kubernetes Service
-- [x] Mechanism for microservices to access shared resources, such as a Key Vault.
-- [ ] Documentation on how microservices can utilize the shared infrastructure.
-- [ ] CI/CD pipeline for automated infrastructure provisioning and updates.

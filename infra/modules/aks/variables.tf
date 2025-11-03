@@ -37,8 +37,8 @@ variable "dns_prefix" {
   default     = null
 }
 
-variable "attached_container_registries" {
-  description = "List of Azure Container Registry IDs to attach to the AKS cluster."
-  type        = list(string)
-  default     = []
+variable "attached_container_registry" {
+  description = "Azure Container Registry ID to attach to the AKS cluster."
+  type        = string
+  default     = null
 }

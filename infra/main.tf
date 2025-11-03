@@ -26,9 +26,7 @@ module "kubernetes" {
   node_vm_size        = var.aks_node_vm_size
 
   # Allow the AKS cluster to pull images from the ACR
-  attached_container_registries = [
-    module.acr.id
-  ]
+  attached_container_registry = module.acr.id
 }
 
 # Store information on resources in Key Vault, where other microservices can access them

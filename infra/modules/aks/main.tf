@@ -57,8 +57,6 @@ resource "azurerm_kubernetes_cluster" "this" {
 resource "azurerm_role_assignment" "acr_attachment" {
   principal_id                     = azurerm_kubernetes_cluster.this.kubelet_identity[0].object_id
   role_definition_name             = "AcrPull"
+  scope                            = var.attached_container_registry
   skip_service_principal_aad_check = true
-
-  scope    = each.value
-  for_each = toset(var.attached_container_registries)
 }
