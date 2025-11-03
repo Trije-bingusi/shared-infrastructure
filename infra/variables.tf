@@ -50,3 +50,21 @@ variable "pg_location" {
   type        = string
   default     = null
 }
+
+# Kubernetes service
+variable "aks_name" {
+  description = "Name of the Azure Kubernetes Service cluster."
+  type        = string
+}
+
+variable "aks_node_count" {
+  description = "Number of nodes in the Azure Kubernetes Service cluster."
+  type        = number
+  default     = 2
+}
+
+variable "aks_node_vm_size" {
+  description = "The size of the virtual machines in the Azure Kubernetes Service cluster."
+  type        = string
+  default     = "Standard_B2pls_v2"
+}

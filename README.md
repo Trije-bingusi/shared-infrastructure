@@ -20,7 +20,9 @@ To work with this repository, ensure you have the following tools installed:
 ## Shared Infrastructure
 
 The resources defined in this repository are intended to be shared among multiple microservices. Currently, the following resources are provisioned:
-- TODO: List shared resources here.
+- [Azure PostgreSQL Flexible Server](./infra/modules/postgres-flexible/): A managed PostgreSQL database service for microservices.
+- [Azure Container Registry (ACR)](./infra/modules/acr/): A private container registry for storing Docker images used by microservices.
+- [Azure Kubernetes Service (AKS)](./infra/modules/aks/): A managed Kubernetes cluster for deploying and managing containerized microservices. A role is also assigned to allow the AKS cluster to pull images from the ACR.
 
 
 ## Usage of Provisioned Resources by Microservices
@@ -52,10 +54,10 @@ To use the script, follow the steps below:
 
 - [x] Script for initializing the remote backend and documentation of its usage.
 - [x] Root module for infrastructure provisioning
-- [ ] Implementation of modules for provisioning shared resources.
+- [x] Implementation of modules for provisioning shared resources.
   - [x] Azure Container Registry
   - [x] Azure PostgreSQL Flexible Server
-  - [ ] Azure Kubernetes Service
+  - [x] Azure Kubernetes Service
 - [ ] Mechanism for microservices to access shared resources, such as a Key Vault.
 - [ ] Documentation on how microservices can utilize the shared infrastructure.
 - [ ] CI/CD pipeline for automated infrastructure provisioning and updates.
