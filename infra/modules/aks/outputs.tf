@@ -9,3 +9,13 @@ output "kube_config" {
   value       = azurerm_kubernetes_cluster.this.kube_config_raw
   sensitive   = true
 }
+
+output "id" {
+  description = "The ID of the Kubernetes cluster."
+  value       = azurerm_kubernetes_cluster.this.id
+}
+
+output "name" {
+  description = "The name of the Kubernetes cluster."
+  value       = azurerm_kubernetes_cluster.this.name
+}

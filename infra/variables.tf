@@ -74,3 +74,9 @@ variable "keyvault_name" {
   description = "Name of the Azure Key Vault to store shared resource information."
   type        = string
 }
+
+# Managed Identities for GitHub actions
+variable "identity_microservices_name" {
+  description = "Name of the managed identity for microservices."
+  type        = string
+}
