@@ -36,10 +36,13 @@ module "keyvault" {
   resource_group_name = var.resource_group_name
   location            = var.location
   secrets = {
+    "rg-name"           = var.resource_group_name
     "acr-login-server"  = module.acr.login_server
+    "pg-name"           = module.postgres.name
     "pg-fqdn"           = module.postgres.fqdn
     "pg-admin-username" = module.postgres.administrator_login
     "pg-admin-password" = module.postgres.administrator_password
     "aks-kube-config"   = module.kubernetes.kube_config
+    "aks-name"          = module.kubernetes.name
   }
 }

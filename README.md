@@ -7,6 +7,7 @@ Repository for provisioning infrastructure shared among microservices.
 
 - [`scripts/`](./scripts/): Contains utility scripts for managing infrastructure.
   - [`init-remote-backend.sh`](./scripts/init-remote-backend.sh): Script to initialize remote state backend for Terraform. Further details are provided in the [Remote State Initialization](#remote-state-initialization) section below.
+  - [`manage-services.sh`](./scripts/manage-services.sh): Script to start or stop shared services (AKS and PostgreSQL Flexible Server), as described in the [Starting and Stopping Services](#starting-and-stopping-services) section.
 - [`infra/`](./infra/): The main directory containing Terraform configurations for shared infrastructure.
 
 
@@ -32,10 +33,23 @@ Details on how microservices can access the provisioned resources are provided i
 
 To deploy the infrastructure to Azure, follow these steps.
 ```sh
-cd infra          # Navigate to the infra directory
-terraform init    # Initialize Terraform
-terraform plan    # Optionally review the planned changes to the infrastructure
-terraform apply   # Apply the changes
+# Navigate to the infra directory and create terraform.tfvars from the example file
+cd infra
+cp terraform.tfvars.example terraform.tfvars     # edit as needed
+
+# Perform Terraform operations
+terraform init
+terraform plan    # review planned changes to the infrastructure
+terraform apply
+```
+
+
+## Starting and Stopping Services
+
+To save costs when the shared services are not needed, you can start or stop the AKS cluster and PostgreSQL Flexible Server using the [`manage-services.sh`](./scripts/manage-services.sh) script. The script accepts a single argument: `start` or `stop`.
+```sh
+./scripts/manage-services.sh start   # Starts the services
+./scripts/manage-services.sh stop    # Stops the services
 ```
 
 

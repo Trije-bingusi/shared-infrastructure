@@ -18,3 +18,8 @@ output "administrator_password" {
   value       = azurerm_postgresql_flexible_server.this.administrator_password
   sensitive   = true
 }
+
+output "name" {
+  description = "The name of the PostgreSQL Flexible Server."
+  value       = azurerm_postgresql_flexible_server.this.name
+}

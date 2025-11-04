@@ -1,0 +1,14 @@
+output "rg_name" {
+  description = "The name of the resource group."
+  value       = var.resource_group_name
+}
+
+output "pg_name" {
+  description = "The name of the PostgreSQL server."
+  value       = module.postgres.name
+}
+
+output "aks_name" {
+  description = "The name of the AKS cluster."
+  value       = module.kubernetes.name
+}
