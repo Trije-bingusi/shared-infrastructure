@@ -15,7 +15,7 @@ Repository for provisioning infrastructure shared among microservices.
 
 To work with this repository, ensure you have the following tools installed:
 - [Terraform](https://developer.hashicorp.com/terraform/install) for managing cloud infrastructure,
-- [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) for interacting with Azure resources. Make sure you are logged in using `az login`.
+- [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) for interacting with Azure resources. Make sure you are logged in using `az login`. Also ensure the correct subscription is selected using `az account set --subscription "your-subscription-id"`.
 
 
 ## Provisioned Resources
@@ -41,6 +41,18 @@ cp terraform.tfvars.example terraform.tfvars     # edit as needed
 terraform init
 terraform plan    # review planned changes to the infrastructure
 terraform apply
+```
+
+
+## Preparing the Kubernetes Cluster
+
+After provisioning the AKS cluster, it needs to be further prepared to be ready for deploying microservices. This includes
+- creating a namespace for the microservices, and
+- installing the NGINX Ingress Controller.
+
+This is done using the [`prepare-cluster.sh`](./scripts/prepare-cluster.sh) script:
+```sh
+./scripts/prepare-cluster.sh
 ```
 
 

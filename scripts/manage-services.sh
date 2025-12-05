@@ -6,9 +6,6 @@
 # Usage: ./scripts/manage-services.sh start|stop
 # =====================================================================
 
-# Configure paths
-INFRA_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../infra" && pwd)"
-
 # Validate arguments
 ACTION=${1:-}
 if [[ -z "$ACTION" ]]; then
@@ -22,17 +19,8 @@ if [[ "$ACTION" != "start" && "$ACTION" != "stop" ]]; then
 fi
 
 # Load Terraform outputs
-echo "Loading Terraform outputs from $INFRA_DIR"
-
-pushd "$INFRA_DIR" > /dev/null
-
-terraform init > /dev/null
-
-RG_NAME=$(terraform output -raw rg_name)
-AKS_NAME=$(terraform output -raw aks_name)
-PG_NAME=$(terraform output -raw pg_name)
-
-popd > /dev/null
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/utils/config.sh"
 
 echo "Retrieved resource names from Terraform outputs:"
 echo "   Resource Group: $RG_NAME"
@@ -40,7 +28,6 @@ echo "   AKS Cluster:    $AKS_NAME"
 echo "   PostgreSQL:     $PG_NAME"
 
 # Get state of services
-
 AKS_STATE=$(
     az aks show --name "$AKS_NAME" --resource-group "$RG_NAME" \
     --query "powerState.code" -o tsv 2>/dev/null || echo "Unknown"
