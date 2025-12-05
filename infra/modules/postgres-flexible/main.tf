@@ -37,3 +37,15 @@ resource "azurerm_postgresql_flexible_server" "this" {
   administrator_login    = coalesce(var.administrator_login, random_pet.login.id)
   administrator_password = coalesce(var.administrator_password, random_password.login.result)
 }
+
+# Optionally allow all Azure services to access the server
+# TODO: We should look into how to allow only a specific resource (such as our
+# AKS cluster) instead of all Azure services.
+resource "azurerm_postgresql_flexible_server_firewall_rule" "allow_azure" {
+  count               = var.allow_all_azure_services ? 1 : 0
+  name                = "AllowAllAzureServices"
+  server_id           = azurerm_postgresql_flexible_server.this.id
+  start_ip_address    = "0.0.0.0"
+  end_ip_address      = "0.0.0.0"
+}
+
