@@ -1,13 +1,27 @@
 #!/usr/bin/env bash
+# =====================================================================
+# Script: prepare-cluster.sh
+# Description: Prepares a Kubernetes cluster in a specified environment
+#              by creating namespaces and installing NGINX ingress.
+# Usage: ./scripts/prepare-cluster.sh <env>
+# =====================================================================
 
 # Configure names of created namespaces
 SERVICES_NAMESPACE=rso
 INGRESS_NAMESPACE=ingress-nginx
 INGRESS_RELEASE=ingress-nginx
 
+# Make sure environment argument is provided
+ENVIRONMENT=${1:-}
+if [[ -z "$ENVIRONMENT" ]]; then
+  echo "Usage: $0 <env>"
+  exit 1
+fi
+
 # Fetch configuration and authenticate to the cluster
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "${SCRIPT_DIR}/utils/config.sh"
+
+source "${SCRIPT_DIR}/utils/config.sh" "$ENVIRONMENT"
 source "${SCRIPT_DIR}/utils/authenticate.sh"
 
 # Utility function for creating a namespace if it doesn't exist

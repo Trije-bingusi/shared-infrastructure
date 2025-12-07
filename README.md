@@ -7,8 +7,11 @@ Repository for provisioning infrastructure shared among microservices.
 
 - [`scripts/`](./scripts/): Contains utility scripts for managing infrastructure.
   - [`init-remote-backend.sh`](./scripts/init-remote-backend.sh): Script to initialize remote state backend for Terraform. Further details are provided in the [Remote State Initialization](#remote-state-initialization) section below.
-  - [`manage-services.sh`](./scripts/manage-services.sh): Script to start or stop shared services (AKS and PostgreSQL Flexible Server), as described in the [Starting and Stopping Services](#starting-and-stopping-services) section.
-- [`infra/`](./infra/): The main directory containing Terraform configurations for shared infrastructure.
+  - [`manage-services.sh`](./scripts/manage-services.sh): Script to start or stop services (AKS and PostgreSQL Flexible Server), as described in the [Starting and Stopping Services](#starting-and-stopping-services) section.
+  - [`prepare-cluster.sh`](./scripts/prepare-cluster.sh): Script to prepare the AKS cluster for deploying microservices, as detailed in the [Preparing the Kubernetes Cluster](#preparing-the-kubernetes-cluster) section.
+- [`infra/`](./infra/): The main directory containing Terraform configuration. It is organized into:
+  - [`modules/`](./infra/modules/): Reusable Terraform modules for different resources such as PostgreSQL, ACR, AKS, and Key Vault.
+  - [`environments/`](./infra/environments/): Environment-specific Terraform configurations for `shared`, `dev`, and `prod` environments. The `shared` environment provisions the ACR, while `dev` and `prod` environments provision their own AKS clusters, PostgreSQL databases, and Key Vaults.
 
 
 ## Prerequisites
@@ -31,66 +34,65 @@ Details on how microservices can access the provisioned resources are provided i
 
 ## Deploying Resources
 
-To deploy the infrastructure to Azure, follow these steps.
-```sh
-# Navigate to the infra directory and create terraform.tfvars from the example file
-cd infra
-cp terraform.tfvars.example terraform.tfvars     # edit as needed
+The infrastructure is organized into separate directories for each environment:
+- `infra/environments/shared/`: ACR (Azure Container Registry) shared by all environments.
+- `infra/environments/dev/`: Dev environment (AKS, PostgreSQL, Key Vault).
+- `infra/environments/prod/`: Prod environment (AKS, PostgreSQL, Key Vault.)
 
-# Perform Terraform operations
+To provision the resources for a specific environment <env>, navigate to the corresponding directory and run the Terraform commands. Note that the `shared` environment should be provisioned first to create the ACR before provisioning `dev` and `prod` environments.
+```sh
+cd infra/environments/<env>   # Replace <env> with 'shared', 'dev', or 'prod'
 terraform init
-terraform plan    # review planned changes to the infrastructure
+terraform plan
 terraform apply
 ```
 
-
 ## Preparing the Kubernetes Cluster
 
-After provisioning the AKS cluster, it needs to be further prepared to be ready for deploying microservices. This includes
-- creating a namespace for the microservices, and
-- installing the NGINX Ingress Controller.
-
-This is done using the [`prepare-cluster.sh`](./scripts/prepare-cluster.sh) script:
+After provisioning an AKS cluster, prepare it for deploying microservices by running the [`prepare-cluster.sh`](./scripts/prepare-cluster.sh) script.
 ```sh
-./scripts/prepare-cluster.sh
+./scripts/prepare-cluster.sh <env>  # Replace <env> with 'dev' or 'prod'
 ```
+
+This script creates namespaces and installs the NGINX Ingress Controller.
 
 
 ## Starting and Stopping Services
 
-To save costs when the shared services are not needed, you can start or stop the AKS cluster and PostgreSQL Flexible Server using the [`manage-services.sh`](./scripts/manage-services.sh) script. The script accepts a single argument: `start` or `stop`.
+To save costs, you can start or stop AKS and PostgreSQL Flexible Server for a specific environment  when they are not in use. Use the [`manage-services.sh`](./scripts/manage-services.sh) script to manage the services.
 ```sh
-./scripts/manage-services.sh start   # Starts the services
-./scripts/manage-services.sh stop    # Stops the services
+# Starts or stops services for the specified environment <env> ('dev' or 'prod')
+./scripts/manage-services.sh <env> start # Start the services
+./scripts/manage-services.sh <env> stop  # Stop the services
 ```
 
 
 ## Usage of Provisioned Resources by Microservices
 
-Individual microservices need to know the infrastructure configuration such as kubernetes cluster name, PostgreSQL server name, and credentials to connect to the database. To securely provide this information to microservices, the repository provisions an Azure Key Vault where all necessary configuration details are stored as secrets. The name of the Key Vault can be found in the Terraform outputs (after the infrastructure is provisioned) as follows:
+Each environment (dev/prod) provisions its own Azure Key Vault containing all necessary configuration details. To obtain the Key Vault name for a specific environment, run:
 ```sh
-cd infra # navigate to the infra directory
+cd infra/environments/<env>  # Replace <env> with 'dev' or 'prod'
 terraform output keyvault_name
 ```
 
-The name of the Key Vault is the *only* piece of information that microservices need to access the configuration of the shared resources. The microservices can then use the Azure SDK or Azure CLI to retrieve the necessary values from the Key Vault at runtime.
+Microservices can retrieve secrets from the Key Vault at runtime:
 ```sh
 az keyvault secret show \
    --vault-name <keyvault_name> \
    --name <secret_name>
 ```
 
-The secrets stored in the Key Vault are shown below.
+The secrets stored in each environment's Key Vault are shown in the table below.
 | **Secret Name**     | **Description**                                                   |
 | ------------------- | ----------------------------------------------------------------- |
-| `rg-name`           | Name of the Azure Resource Group used for all deployed resources. |
-| `acr-login-server`  | Login server URL of the Azure Container Registry (ACR).           |
-| `pg-name`           | Name of the PostgreSQL server instance.                           |
+| `rg-name`           | Name of the Azure Resource Group for this environment.            |
+| `acr-login-server`  | Login server URL of the shared Azure Container Registry (ACR).    |
+| `pg-name`           | Name of the PostgreSQL server instance for this environment.      |
 | `pg-fqdn`           | Fully Qualified Domain Name (FQDN) of the PostgreSQL server.      |
 | `pg-admin-username` | PostgreSQL administrator username.                                |
 | `pg-admin-password` | PostgreSQL administrator password.                                |
 | `aks-kube-config`   | Base64-encoded kubeconfig for accessing the AKS cluster.          |
-| `aks-name`          | Name of the AKS cluster.                                          |
+| `aks-name`          | Name of the AKS cluster for this environment.                     |
 
 
 ## Remote State Initialization

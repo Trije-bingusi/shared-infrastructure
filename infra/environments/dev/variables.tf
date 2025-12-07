@@ -9,16 +9,10 @@ variable "location" {
   type        = string
 }
 
-# Container registry
+# Shared ACR reference
 variable "acr_name" {
-  description = "Name of the Azure Container Registry."
+  description = "Name of the existing Azure Container Registry (from shared infrastructure)."
   type        = string
-}
-
-variable "acr_sku" {
-  description = "SKU for the Azure Container Registry."
-  type        = string
-  default     = "Basic"
 }
 
 # Postgres server

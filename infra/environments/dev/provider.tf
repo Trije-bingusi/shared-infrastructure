@@ -8,9 +8,9 @@ terraform {
 
   backend "azurerm" {
     resource_group_name  = "rso-dev-rg"
-    storage_account_name = "tfstatebingusi"
+    storage_account_name = "tfstatebingusijt"
     container_name       = "tfstate"
-    key                  = "terraform.tfstate" # modify if necessary, e.g. for different environments
+    key                  = "dev/terraform.tfstate"
   }
 }
 

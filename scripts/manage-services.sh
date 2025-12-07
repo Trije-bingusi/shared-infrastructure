@@ -2,14 +2,15 @@
 # =====================================================================
 # Script: manage-services.sh
 # Description: Starts or stops Azure AKS and PostgreSQL Flexible Server
-#              based on Terraform outputs.
-# Usage: ./scripts/manage-services.sh start|stop
+#              for a specified environment.
+# Usage: ./scripts/manage-services.sh <env> start|stop
 # =====================================================================
 
 # Validate arguments
-ACTION=${1:-}
-if [[ -z "$ACTION" ]]; then
-  echo "Usage: $0 start|stop"
+ENVIRONMENT=${1:-}
+ACTION=${2:-}
+if [[ -z "$ENVIRONMENT" || -z "$ACTION" ]]; then
+  echo "Usage: $0 <env> start|stop"
   exit 1
 fi
 
@@ -20,7 +21,7 @@ fi
 
 # Load Terraform outputs
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "${SCRIPT_DIR}/utils/config.sh"
+source "${SCRIPT_DIR}/utils/config.sh" "$ENVIRONMENT"
 
 echo "Retrieved resource names from Terraform outputs:"
 echo "   Resource Group: $RG_NAME"
