@@ -63,6 +63,12 @@ variable "aks_node_vm_size" {
   default     = "Standard_B2pls_v2"
 }
 
+variable "aks_location" {
+  description = "The Azure region where the AKS cluster will be created. If not specified, the resource group location will be used."
+  type        = string
+  default     = null
+}
+
 # Key Vault for centralized access to resources
 variable "keyvault_name" {
   description = "Name of the Azure Key Vault to store shared resource information."

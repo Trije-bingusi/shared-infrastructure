@@ -37,7 +37,6 @@ if kubectl version >/dev/null 2>&1; then
         exit 1
     fi
     echo "Successfully authenticated to AKS cluster '$AKS_NAME'."
-    exit 0
 else
     echo "Error: Failed to authenticate to AKS cluster '$AKS_NAME'."
     exit 1

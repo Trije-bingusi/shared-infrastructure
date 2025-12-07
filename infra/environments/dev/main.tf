@@ -20,7 +20,7 @@ module "postgres" {
 module "kubernetes" {
   source              = "../../modules/aks"
   resource_group_name = var.resource_group_name
-  location            = var.location
+  location            = coalesce(var.aks_location, var.location)
   name                = var.aks_name
   node_count          = var.aks_node_count
   node_vm_size        = var.aks_node_vm_size

@@ -15,7 +15,8 @@ pg_location   = "Switzerland North"
 # Kubernetes cluster
 aks_name         = "rsobingusiaksdev"
 aks_node_count   = 1
-aks_node_vm_size = "Standard_B2pls_v2"
+aks_node_vm_size = "Standard_B2als_v2"
+aks_location     = "Switzerland North"
 
 # Key Vault
 keyvault_name = "rsobingusivaultdev"
