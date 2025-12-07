@@ -67,7 +67,30 @@ To save costs when the shared services are not needed, you can start or stop the
 
 ## Usage of Provisioned Resources by Microservices
 
-TODO: Describe how microservices can utilize the shared infrastructure resources.
+Individual microservices need to know the infrastructure configuration such as kubernetes cluster name, PostgreSQL server name, and credentials to connect to the database. To securely provide this information to microservices, the repository provisions an Azure Key Vault where all necessary configuration details are stored as secrets. The name of the Key Vault can be found in the Terraform outputs (after the infrastructure is provisioned) as follows:
+```sh
+cd infra # navigate to the infra directory
+terraform output keyvault_name
+```
+
+The name of the Key Vault is the *only* piece of information that microservices need to access the configuration of the shared resources. The microservices can then use the Azure SDK or Azure CLI to retrieve the necessary values from the Key Vault at runtime.
+```sh
+az keyvault secret show \
+   --vault-name <keyvault_name> \
+   --name <secret_name>
+```
+
+The secrets stored in the Key Vault are shown below.
+| **Secret Name**     | **Description**                                                   |
+| ------------------- | ----------------------------------------------------------------- |
+| `rg-name`           | Name of the Azure Resource Group used for all deployed resources. |
+| `acr-login-server`  | Login server URL of the Azure Container Registry (ACR).           |
+| `pg-name`           | Name of the PostgreSQL server instance.                           |
+| `pg-fqdn`           | Fully Qualified Domain Name (FQDN) of the PostgreSQL server.      |
+| `pg-admin-username` | PostgreSQL administrator username.                                |
+| `pg-admin-password` | PostgreSQL administrator password.                                |
+| `aks-kube-config`   | Base64-encoded kubeconfig for accessing the AKS cluster.          |
+| `aks-name`          | Name of the AKS cluster.                                          |
 
 
 ## Remote State Initialization

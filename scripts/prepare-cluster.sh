@@ -31,12 +31,12 @@ helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx >/dev/nul
 helm repo update >/dev/null
 
 echo "Installing NGINX Ingress Controller via Helm"
+INGRESS_VALUES_PATH="${SCRIPT_DIR}/ingress/values.yaml"
 helm upgrade --install "$INGRESS_RELEASE" ingress-nginx/ingress-nginx \
+  --version "4.14.1" \
   --namespace "$INGRESS_NAMESPACE" \
-  --set controller.publishService.enabled=true \
-  --set controller.metrics.enabled=true \
-  --set controller.service.type=LoadBalancer
-
+  --values "$INGRESS_VALUES_PATH"
+  
 # Verify Ingress installation (fetch external IP)
 n_retries=40
 wait_seconds=5

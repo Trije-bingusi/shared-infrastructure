@@ -12,3 +12,8 @@ output "aks_name" {
   description = "The name of the AKS cluster."
   value       = module.kubernetes.name
 }
+
+output "keyvault_name" {
+  description = "The name of the Azure Key Vault."
+  value       = module.keyvault.name
+}

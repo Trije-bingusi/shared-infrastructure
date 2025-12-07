@@ -51,3 +51,9 @@ variable "administrator_password" {
   type        = string
   default     = null
 }
+
+variable "allow_all_azure_services" {
+  description = "Whether to allow all Azure services to access the PostgreSQL flexible server."
+  type        = bool
+  default     = true
+}
