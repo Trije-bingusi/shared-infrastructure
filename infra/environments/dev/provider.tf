@@ -10,7 +10,7 @@ terraform {
     resource_group_name  = "rso-dev-rg"
     storage_account_name = "tfstatebingusi"
     container_name       = "tfstate"
-    key                  = "terraform.tfstate" # modify if necessary, e.g. for different environments
+    key                  = "dev/terraform.tfstate"
   }
 }
 

@@ -9,16 +9,10 @@ variable "location" {
   type        = string
 }
 
-# Container registry
+# Shared ACR reference
 variable "acr_name" {
-  description = "Name of the Azure Container Registry."
+  description = "Name of the existing Azure Container Registry (from shared infrastructure)."
   type        = string
-}
-
-variable "acr_sku" {
-  description = "SKU for the Azure Container Registry."
-  type        = string
-  default     = "Basic"
 }
 
 # Postgres server
@@ -67,6 +61,12 @@ variable "aks_node_vm_size" {
   description = "The size of the virtual machines in the Azure Kubernetes Service cluster."
   type        = string
   default     = "Standard_B2pls_v2"
+}
+
+variable "aks_location" {
+  description = "The Azure region where the AKS cluster will be created. If not specified, the resource group location will be used."
+  type        = string
+  default     = null
 }
 
 # Key Vault for centralized access to resources

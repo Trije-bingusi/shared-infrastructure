@@ -17,3 +17,8 @@ output "keyvault_name" {
   description = "The name of the Azure Key Vault."
   value       = module.keyvault.name
 }
+
+output "acr_login_server" {
+  description = "The login server of the shared Azure Container Registry."
+  value       = data.azurerm_container_registry.shared.login_server
+}
