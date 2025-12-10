@@ -93,6 +93,8 @@ The secrets stored in each environment's Key Vault are shown in the table below.
 | `pg-admin-password` | PostgreSQL administrator password.                                |
 | `aks-kube-config`   | Base64-encoded kubeconfig for accessing the AKS cluster.          |
 | `aks-name`          | Name of the AKS cluster for this environment.                     |
+| `gh-identity-client-id` | Client ID of the Managed Identity for GitHub Actions authentication. |
+| `gh-identity-tenant-id` | Tenant ID of the Managed Identity for GitHub Actions authentication. |
 
 
 ## Remote State Initialization

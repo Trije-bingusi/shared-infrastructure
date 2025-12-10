@@ -21,5 +21,9 @@ aks_location     = "Switzerland North"
 # Key Vault
 keyvault_name = "rsobingusivaultdev"
 
-# Managed Identities
-identity_microservices_name = "identity-gh-microservices-dev"
+# Managed Identity for GitHub actions
+identity_github_name = "identity-gh-microservices-dev"
+identity_github_repos = [
+    "repo:Trije-bingusi/svc-courses:environment:dev"
+    # Add more repositories as needed
+]
