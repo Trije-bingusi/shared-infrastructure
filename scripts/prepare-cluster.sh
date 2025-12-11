@@ -2,14 +2,18 @@
 # =====================================================================
 # Script: prepare-cluster.sh
 # Description: Prepares a Kubernetes cluster in a specified environment
-#              by creating namespaces and installing NGINX ingress.
+#              by creating namespaces, setting the database URL secret,
+#              and installing NGINX ingress.
 # Usage: ./scripts/prepare-cluster.sh <env>
 # =====================================================================
+
+set -euo pipefail
 
 # Configure names of created namespaces
 SERVICES_NAMESPACE=rso
 INGRESS_NAMESPACE=ingress-nginx
 INGRESS_RELEASE=ingress-nginx
+DB_SECRET_NAME="db-connection-url"
 
 # Make sure environment argument is provided
 ENVIRONMENT=${1:-}
@@ -38,6 +42,22 @@ create_namespace() {
 # Create the shared namespace for our services and a namespace for Ingress
 create_namespace "$SERVICES_NAMESPACE"
 create_namespace "$INGRESS_NAMESPACE"
+
+# Set the database URL secret in the services namespace
+echo "Setting database URL secret '$DB_SECRET_NAME' in namespace '$SERVICES_NAMESPACE'."
+DATABASE_BASE_URL=$(az keyvault secret show \
+  --vault-name "${KEYVAULT_NAME}" \
+  --name "pg-url" \
+  --query "value" -o tsv
+)
+
+echo ${DATABASE_BASE_URL:+"Retrieved database URL from Key Vault."}
+exit 0
+
+kubectl create secret generic "$DB_SECRET_NAME" \
+  --from-literal=DATABASE_BASE_URL="$DATABASE_BASE_URL" \
+  --namespace "$SERVICES_NAMESPACE" \
+  --dry-run=client -o yaml | kubectl apply -f -
 
 # Install NGINX Ingress Controller
 echo "Adding Helm repo for ingress-nginx"

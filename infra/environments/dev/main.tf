@@ -38,6 +38,7 @@ module "keyvault" {
   secrets = {
     "rg-name"           = var.resource_group_name
     "acr-login-server"  = data.azurerm_container_registry.shared.login_server
+    "pg-url"            = module.postgres.url
     "pg-name"           = module.postgres.name
     "pg-fqdn"           = module.postgres.fqdn
     "pg-admin-username" = module.postgres.administrator_login
@@ -57,7 +58,7 @@ module "identity_github" {
   resource_group_name = var.resource_group_name
   location            = var.location
   github_federated_identity_subjects = var.identity_github_repos
-  
+
   roles = [
     { name = "Azure Kubernetes Service Cluster User Role", scope = module.kubernetes.id },
     { name = "Key Vault Secrets User", scope = module.keyvault.id },

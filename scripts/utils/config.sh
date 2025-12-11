@@ -29,5 +29,6 @@ terraform init > /dev/null
 RG_NAME=$(terraform output -raw rg_name)
 AKS_NAME=$(terraform output -raw aks_name)
 PG_NAME=$(terraform output -raw pg_name)
+KEYVAULT_NAME=$(terraform output -raw keyvault_name)
 
 popd > /dev/null
