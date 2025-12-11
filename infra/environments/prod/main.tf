@@ -63,5 +63,6 @@ module "identity_github" {
     { name = "Azure Kubernetes Service Cluster User Role", scope = module.kubernetes.id },
     { name = "Key Vault Secrets User", scope = module.keyvault.id },
     { name = "AcrPush", scope = data.azurerm_container_registry.shared.id },
+    { name = "Container Registry Data Importer and Data Reader", scope = data.azurerm_container_registry.shared.id },
   ]
 }
