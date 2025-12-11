@@ -51,9 +51,6 @@ DATABASE_BASE_URL=$(az keyvault secret show \
   --query "value" -o tsv
 )
 
-echo ${DATABASE_BASE_URL:+"Retrieved database URL from Key Vault."}
-exit 0
-
 kubectl create secret generic "$DB_SECRET_NAME" \
   --from-literal=DATABASE_BASE_URL="$DATABASE_BASE_URL" \
   --namespace "$SERVICES_NAMESPACE" \
