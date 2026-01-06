@@ -1,0 +1,27 @@
+image:
+  repository: bitnamilegacy/keycloak
+
+auth:
+  adminUser: admin
+  existingSecret: keycloak-admin
+  passwordSecretKey: password
+
+proxy: edge
+production: false
+
+replicaCount: 1
+
+postgresql:
+  enabled: false
+
+externalDatabase:
+  host: ${db_host}
+  port: 5432
+  database: keycloakdb
+  user: ${db_user}
+  existingSecret: keycloak-db
+  existingSecretPasswordKey: password
+
+ingress:
+  enabled: true
+  ingressClassName: nginx

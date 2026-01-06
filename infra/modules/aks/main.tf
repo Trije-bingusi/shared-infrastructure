@@ -55,7 +55,7 @@ resource "azurerm_kubernetes_cluster" "this" {
 
 # Attach specified container registries
 resource "azurerm_role_assignment" "acr_attachment" {
-  count = var.attached_container_registry == null ? 0 : 1
+  count                            = var.attached_container_registry == null ? 0 : 1
   principal_id                     = azurerm_kubernetes_cluster.this.kubelet_identity[0].object_id
   role_definition_name             = "AcrPull"
   scope                            = var.attached_container_registry

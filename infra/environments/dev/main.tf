@@ -53,10 +53,10 @@ module "keyvault" {
 
 # Managed identity for microservices (push to ACR, deploy to AKS, access Key Vault secrets)
 module "identity_github" {
-  source              = "../../modules/managed-identity"
-  name                = var.identity_github_name
-  resource_group_name = var.resource_group_name
-  location            = var.location
+  source                             = "../../modules/managed-identity"
+  name                               = var.identity_github_name
+  resource_group_name                = var.resource_group_name
+  location                           = var.location
   github_federated_identity_subjects = var.identity_github_repos
 
   roles = [

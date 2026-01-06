@@ -84,7 +84,7 @@ variable "identity_github_name" {
 variable "identity_github_repos" {
   description = "List of GitHub repositories that will be allowed to authenticate using the managed identity via OIDC. Must be in the format 'repo:<organization>/<repository>:<ref>'."
   type        = list(string)
-  default = [ ]
+  default     = []
 }
 
 variable "k8s_namespace" {
@@ -101,5 +101,23 @@ variable "k8s_ingress_namespace" {
   description = "The Kubernetes namespace for the ingress controller."
   type        = string
   default     = "ingress-nginx"
+}
+
+variable "k8s_ingress_chart_version" {
+  description = "The version of the NGINX ingress controller Helm chart."
+  type        = string
+  default     = "4.14.1"
+}
+
+variable "k8s_keycloak_namespace" {
+  description = "The Kubernetes namespace for Keycloak."
+  type        = string
+  default     = "keycloak"
+}
+
+variable "k8s_keycloak_chart_version" {
+  description = "The version of the Keycloak Helm chart."
+  type        = string
+  default     = "25.2.0"
 }
 
