@@ -7,6 +7,8 @@ terraform {
   }
 }
 
+data "azurerm_client_config" "current" {}
+
 # Create the identity and assign the specified roles
 resource "azurerm_user_assigned_identity" "this" {
   name                = var.name
