@@ -24,6 +24,9 @@ keyvault_name = "rsobingusivaultdev"
 # Managed Identity for GitHub actions
 identity_github_name = "identity-gh-microservices-dev"
 identity_github_repos = [
-    "repo:Trije-bingusi/svc-courses:environment:dev"
+    "repo:Trije-bingusi/svc-courses:environment:dev",
+    "repo:Trije-bingusi/svc-notes:environment:dev",
+    "repo:Trije-bingusi/svc-users:environment:dev",
+    "repo:Trije-bingusi/svc-gateway:environment:dev"
     # Add more repositories as needed
 ]
