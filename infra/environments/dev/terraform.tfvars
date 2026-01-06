@@ -30,3 +30,8 @@ identity_github_repos = [
     "repo:Trije-bingusi/svc-gateway:environment:dev"
     # Add more repositories as needed
 ]
+
+# Kubernetes config
+k8s_namespace = "rso"
+k8s_db_secret_name = "db-connection-url"
+

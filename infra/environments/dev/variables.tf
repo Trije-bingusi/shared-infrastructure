@@ -86,3 +86,20 @@ variable "identity_github_repos" {
   type        = list(string)
   default = [ ]
 }
+
+variable "k8s_namespace" {
+  description = "The Kubernetes namespace where microservices will be deployed."
+  type        = string
+}
+
+variable "k8s_db_secret_name" {
+  description = "The name of the Kubernetes secret that will store the database connection URL."
+  type        = string
+}
+
+variable "k8s_ingress_namespace" {
+  description = "The Kubernetes namespace for the ingress controller."
+  type        = string
+  default     = "ingress-nginx"
+}
+
