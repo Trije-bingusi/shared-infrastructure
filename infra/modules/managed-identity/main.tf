@@ -7,6 +7,8 @@ terraform {
   }
 }
 
+data "azurerm_client_config" "current" {}
+
 # Create the identity and assign the specified roles
 resource "azurerm_user_assigned_identity" "this" {
   name                = var.name
@@ -24,14 +26,13 @@ resource "azurerm_role_assignment" "this" {
 
 # Optionally create GitHub OIDC federated identity credential
 resource "azurerm_federated_identity_credential" "gh" {
-  name                = "github-oidc"
+  for_each = toset(var.github_federated_identity_subjects)
+ 
+  name                = "github-oidc-${replace(each.key, "/[^A-Za-z-]/", "")}"
   resource_group_name = var.resource_group_name
   parent_id           = azurerm_user_assigned_identity.this.id
   issuer              = "https://token.actions.githubusercontent.com"
 
-  # Additional variables could be added here for more fine-grained control, e.g. specific branch only
-  subject  = "repo:${var.github_federated_identity.organization}/${var.github_federated_identity.repository}:*"
+  subject  = each.value
   audience = ["api://AzureADTokenExchange"]
-
-  count = var.github_federated_identity == null ? 0 : 1
 }

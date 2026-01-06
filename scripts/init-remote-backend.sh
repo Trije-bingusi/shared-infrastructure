@@ -5,6 +5,8 @@
 # settings. The output file can be specified as an argument; if not provided, it defaults
 # to 'provider.tf'.
 
+set -euo pipefail
+
 RESOURCE_GROUP_NAME=rso-dev-rg
 STORAGE_ACCOUNT_NAME=tfstatebingusi   # needs to be globally unique (across all Azure)
 STORAGE_CONTAINER_NAME=tfstate

@@ -76,7 +76,13 @@ variable "keyvault_name" {
 }
 
 # Managed Identities for GitHub actions
-variable "identity_microservices_name" {
-  description = "Name of the managed identity for microservices."
+variable "identity_github_name" {
+  description = "Name of the managed identity for GitHub actions, used to access relevant resources."
   type        = string
+}
+
+variable "identity_github_repos" {
+  description = "List of GitHub repositories that will be allowed to authenticate using the managed identity via OIDC. Must be in the format 'repo:<organization>/<repository>:<ref>'."
+  type        = list(string)
+  default = [ ]
 }

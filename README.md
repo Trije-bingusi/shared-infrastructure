@@ -87,12 +87,15 @@ The secrets stored in each environment's Key Vault are shown in the table below.
 | ------------------- | ----------------------------------------------------------------- |
 | `rg-name`           | Name of the Azure Resource Group for this environment.            |
 | `acr-login-server`  | Login server URL of the shared Azure Container Registry (ACR).    |
+| `pg-url`            | Connection string URL for the PostgreSQL Flexible Server. Formatted as `postgresql://<username>:<password>@<fqdn>:5432` |
 | `pg-name`           | Name of the PostgreSQL server instance for this environment.      |
 | `pg-fqdn`           | Fully Qualified Domain Name (FQDN) of the PostgreSQL server.      |
 | `pg-admin-username` | PostgreSQL administrator username.                                |
 | `pg-admin-password` | PostgreSQL administrator password.                                |
 | `aks-kube-config`   | Base64-encoded kubeconfig for accessing the AKS cluster.          |
 | `aks-name`          | Name of the AKS cluster for this environment.                     |
+| `gh-identity-client-id` | Client ID of the Managed Identity for GitHub Actions authentication. |
+| `gh-identity-tenant-id` | Tenant ID of the Managed Identity for GitHub Actions authentication. |
 
 
 ## Remote State Initialization

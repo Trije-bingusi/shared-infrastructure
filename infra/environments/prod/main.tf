@@ -38,25 +38,31 @@ module "keyvault" {
   secrets = {
     "rg-name"           = var.resource_group_name
     "acr-login-server"  = data.azurerm_container_registry.shared.login_server
+    "pg-url"            = module.postgres.url
     "pg-name"           = module.postgres.name
     "pg-fqdn"           = module.postgres.fqdn
     "pg-admin-username" = module.postgres.administrator_login
     "pg-admin-password" = module.postgres.administrator_password
     "aks-kube-config"   = module.kubernetes.kube_config
     "aks-name"          = module.kubernetes.name
+
+    "gh-identity-client-id" = module.identity_github.client_id
+    "gh-identity-tenant-id" = module.identity_github.tenant_id
   }
 }
 
 # Managed identity for microservices (push to ACR, deploy to AKS, access Key Vault secrets)
-module "identity_microservices" {
+module "identity_github" {
   source              = "../../modules/managed-identity"
-  name                = var.identity_microservices_name
+  name                = var.identity_github_name
   resource_group_name = var.resource_group_name
   location            = var.location
-
+  github_federated_identity_subjects = var.identity_github_repos
+  
   roles = [
     { name = "Azure Kubernetes Service Cluster User Role", scope = module.kubernetes.id },
     { name = "Key Vault Secrets User", scope = module.keyvault.id },
     { name = "AcrPush", scope = data.azurerm_container_registry.shared.id },
+    { name = "Container Registry Data Importer and Data Reader", scope = data.azurerm_container_registry.shared.id },
   ]
 }

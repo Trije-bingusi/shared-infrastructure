@@ -6,6 +6,8 @@
 # Usage: ./scripts/manage-services.sh <env> start|stop
 # =====================================================================
 
+set -euo pipefail
+
 # Validate arguments
 ENVIRONMENT=${1:-}
 ACTION=${2:-}

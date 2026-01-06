@@ -22,3 +22,18 @@ output "acr_login_server" {
   description = "The login server of the shared Azure Container Registry."
   value       = data.azurerm_container_registry.shared.login_server
 }
+
+output "gh_tenant_id" {
+  description = "The GitHub OIDC tenant ID."
+  value       = module.identity_github.tenant_id
+}
+
+output "gh_client_id" {
+  description = "The GitHub OIDC client ID."
+  value       = module.identity_github.client_id
+}
+
+output "gh_subscription_id" {
+  description = "The GitHub OIDC subscription ID."
+  value       = module.identity_github.subscription_id
+}

@@ -21,11 +21,8 @@ variable "roles" {
   }))
 }
 
-variable "github_federated_identity" {
-  description = "Configuration for GitHub OIDC federated identity credential, used for GitHub Actions. If not provided, no federated identity will be created."
-  type = object({
-    organization = string
-    repository   = string
-  })
-  default = null
+variable "github_federated_identity_subjects" {
+  description = "List of subjects for GitHub OIDC federated identity credentials, used for GitHub Workflows. Should be in the format 'repo:<organization>/<repository>:<ref>'. You can use '*' as a wildcard for <ref> to allow all branches, environments, and tags."
+  type = list(string)
+  default = []
 }
