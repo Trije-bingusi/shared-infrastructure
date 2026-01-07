@@ -50,25 +50,26 @@ terraform apply
 > The `terraform apply` command also prepares the cluster after provisioning resources. It creates the namespace, sets database secrets, installs the NGINX Ingress controller, and deploys Keycloak using Helm.
 
 
+## Public Ingress IP Address
+
+To access the services, you need the public IP address of the NGINX Ingress controller deployed in the AKS cluster. You can retrieve this IP address in three ways:
+1. **Terraform Output**: After applying the Terraform configuration for the desired environment, you can get the ingress IP address by running:
+   ```sh
+   cd infra/environments/<env>  # Replace <env> with 'dev' or 'prod'
+   terraform output k8s_ingress_ip
+   ```
+2. **Kubectl Command**: Authenticate to the AKS cluster using *kubectl* and run:
+   ```sh
+   kubectl get svc -n ingress-nginx
+   ```
+   Look for the `EXTERNAL-IP` of the `ingress-nginx-controller` service.
+3. **Azure Portal**: Navigate to the AKS resource in the Azure Portal, go to the "Services and ingresses" section, and find the public IP address associated with the NGINX Ingress controller.
+
+
+
 ## Keycloak (Identity Provider)
 
-As part of cluster preparation during `terraform apply`, Keycloak is deployed to the AKS cluster in each environment. To access the Keycloak admin console, follow the steps below. These steps are needed since we do not have a domain name.
-
-1. Navigate to the Terraform environment for which you want to set up Keycloak console access
-```sh
-cd infra/environments/<env>   # Replace <env> with 'dev' or 'prod'
-```
-2. Retrieve the Ingress external IP, Keycloak hostname, and admin password
-```sh
-INGRESS_IP=$(terraform output -raw k8s_ingress_ip)
-KEYCLOAK_HOSTNAME=$(terraform output -raw k8s_keycloak_hostname)
-KEYCLOAK_ADMIN_PASSWORD=$(terraform output -raw k8s_keycloak_admin_password)
-```
-3. Add the following entry to your local `/etc/hosts` file (or `/Windows/System32/drivers/etc/hosts`) to map the Keycloak hostname to the Ingress IP
-```<INGRESS_IP>   <KEYCLOAK_HOSTNAME>```
-4. Access the Keycloak admin console in your web browser at `http://<KEYCLOAK_HOSTNAME>/auth/admin/` using the following credentials:
-   - Username: `admin`
-   - Password: `<KEYCLOAK_ADMIN_PASSWORD>`
+As part of cluster preparation during `terraform apply`, Keycloak is deployed to the AKS cluster in each environment. It can be accessed on `https://<ingress-ip>.nip.io/keycloak/`, where `<ingress-ip>` is the public IP address of the NGINX Ingress controller.
 
 
 ## Starting and Stopping Services

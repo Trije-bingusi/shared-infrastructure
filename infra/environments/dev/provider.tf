@@ -12,6 +12,11 @@ terraform {
     helm = {
       source = "hashicorp/helm"
     }
+
+    kubectl = {
+      source  = "gavinbunney/kubectl"
+      version = "~> 1.14"
+    }
   }
 
   backend "azurerm" {
@@ -41,4 +46,11 @@ provider "helm" {
     client_key             = base64decode(module.kubernetes.kube_config.client_key)
     cluster_ca_certificate = base64decode(module.kubernetes.kube_config.cluster_ca_certificate)
   }
+}
+
+provider "kubectl" {
+  host                   = module.kubernetes.kube_config.host
+  client_certificate     = base64decode(module.kubernetes.kube_config.client_certificate)
+  client_key             = base64decode(module.kubernetes.kube_config.client_key)
+  cluster_ca_certificate = base64decode(module.kubernetes.kube_config.cluster_ca_certificate)
 }

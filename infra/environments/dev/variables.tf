@@ -121,8 +121,8 @@ variable "k8s_keycloak_chart_version" {
   default     = "25.2.0"
 }
 
-variable "k8s_keycloak_hostname" {
-  description = "The hostname for accessing Keycloak via ingress."
+variable "k8s_tls_certificate_name" {
+  description = "The name of the TLS certificate for the ingress."
   type        = string
-  default     = "keycloak.local"
+  default     = "nip-tls"
 }

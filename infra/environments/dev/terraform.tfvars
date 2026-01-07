@@ -34,4 +34,3 @@ identity_github_repos = [
 # Kubernetes config
 k8s_namespace         = "rso"
 k8s_db_secret_name    = "db-connection-url"
-k8s_keycloak_hostname = "keycloak-rso-dev.local"

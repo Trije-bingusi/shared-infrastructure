@@ -56,6 +56,53 @@ data "kubernetes_service_v1" "ingress" {
   depends_on = [helm_release.ingress_nginx]
 }
 
+locals {
+  k8s_ingress_ip = try(
+    data.kubernetes_service_v1.ingress.status[0].load_balancer[0].ingress[0].ip,
+    "Pending IP assignment (rerun apply later)"
+  )
+}
+
+# TLS certificate manager
+resource "kubernetes_namespace_v1" "cert_manager" {
+  metadata {
+    name = "cert-manager"
+  }
+}
+
+resource "helm_release" "cert_manager" {
+  name       = "cert-manager"
+  namespace  = kubernetes_namespace_v1.cert_manager.metadata[0].name
+  repository = "https://charts.jetstack.io"
+  chart      = "cert-manager"
+  version    = "v1.14.3"
+
+  set = [{
+    name  = "installCRDs"
+    value = "true"
+  }]
+}
+
+resource "kubectl_manifest" "letsencrypt_issuer" {
+  yaml_body = file("${path.module}/k8s/cluster-issuer.yaml")
+
+  depends_on = [
+    helm_release.cert_manager
+  ]
+}
+
+resource "kubectl_manifest" "nip_tls" {
+  yaml_body = templatefile("${path.module}/k8s/certificate.yaml", {
+    name      = var.k8s_tls_certificate_name
+    namespace = kubernetes_namespace_v1.microservices.metadata[0].name
+    hostname  = "${local.k8s_ingress_ip}.nip.io"
+  })
+
+  depends_on = [
+    kubectl_manifest.letsencrypt_issuer
+  ]
+}
+
 # Keycloak for identity management
 resource "kubernetes_namespace_v1" "keycloak" {
   metadata {
@@ -110,9 +157,9 @@ resource "helm_release" "keycloak" {
 
   values = [
     templatefile("${path.module}/k8s/keycloak-values.yaml", {
-      db_host  = module.postgres.fqdn
-      db_user  = module.postgres.administrator_login
-      hostname = var.k8s_keycloak_hostname
+      db_host    = module.postgres.fqdn
+      db_user    = module.postgres.administrator_login
+      hostname   = "${local.k8s_ingress_ip}.nip.io"
     })
   ]
 

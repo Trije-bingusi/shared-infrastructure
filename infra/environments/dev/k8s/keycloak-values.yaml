@@ -9,6 +9,7 @@ auth:
 proxy: edge
 production: false
 
+httpRelativePath: /keycloak/
 replicaCount: 1
 
 postgresql:
@@ -26,3 +27,4 @@ ingress:
   enabled: true
   ingressClassName: nginx
   hostname: ${hostname}
+  tls: true
