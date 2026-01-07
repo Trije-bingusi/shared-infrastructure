@@ -25,3 +25,4 @@ externalDatabase:
 ingress:
   enabled: true
   ingressClassName: nginx
+  hostname: ${hostname}

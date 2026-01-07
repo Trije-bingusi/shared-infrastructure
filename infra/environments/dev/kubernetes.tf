@@ -46,6 +46,16 @@ resource "helm_release" "ingress_nginx" {
   ]
 }
 
+# Retrieve the external IP of the ingress controller
+data "kubernetes_service_v1" "ingress" {
+  metadata {
+    name      = "ingress-nginx-controller"
+    namespace = kubernetes_namespace_v1.ingress.metadata[0].name
+  }
+
+  depends_on = [helm_release.ingress_nginx]
+}
+
 # Keycloak for identity management
 resource "kubernetes_namespace_v1" "keycloak" {
   metadata {
@@ -100,8 +110,9 @@ resource "helm_release" "keycloak" {
 
   values = [
     templatefile("${path.module}/k8s/keycloak-values.yaml", {
-      db_host = module.postgres.fqdn
-      db_user = module.postgres.administrator_login
+      db_host  = module.postgres.fqdn
+      db_user  = module.postgres.administrator_login
+      hostname = var.k8s_keycloak_hostname
     })
   ]
 

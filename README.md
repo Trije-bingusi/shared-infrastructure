@@ -8,7 +8,7 @@ Repository for provisioning infrastructure shared among microservices.
 - [`scripts/`](./scripts/): Contains utility scripts for managing infrastructure.
   - [`init-remote-backend.sh`](./scripts/init-remote-backend.sh): Script to initialize remote state backend for Terraform. Further details are provided in the [Remote State Initialization](#remote-state-initialization) section below.
   - [`manage-services.sh`](./scripts/manage-services.sh): Script to start or stop services (AKS and PostgreSQL Flexible Server), as described in the [Starting and Stopping Services](#starting-and-stopping-services) section.
-  - [`prepare-cluster.sh`](./scripts/prepare-cluster.sh): Script to prepare the AKS cluster for deploying microservices, as detailed in the [Preparing the Kubernetes Cluster](#preparing-the-kubernetes-cluster) section.
+  - [`configure-github-repo.sh`](./scripts/configure-github-repo.sh): Script to create *prod* and *dev* secrets in a GitHub repository for accessing provisioned resources, such as from a CI/CD pipeline.
 - [`infra/`](./infra/): The main directory containing Terraform configuration. It is organized into:
   - [`modules/`](./infra/modules/): Reusable Terraform modules for different resources such as PostgreSQL, ACR, AKS, and Key Vault.
   - [`environments/`](./infra/environments/): Environment-specific Terraform configurations for `shared`, `dev`, and `prod` environments. The `shared` environment provisions the ACR, while `dev` and `prod` environments provision their own AKS clusters, PostgreSQL databases, and Key Vaults.
@@ -47,14 +47,28 @@ terraform plan
 terraform apply
 ```
 
-## Preparing the Kubernetes Cluster
+> The `terraform apply` command also prepares the cluster after provisioning resources. It creates the namespace, sets database secrets, installs the NGINX Ingress controller, and deploys Keycloak using Helm.
 
-After provisioning an AKS cluster, prepare it for deploying microservices by running the [`prepare-cluster.sh`](./scripts/prepare-cluster.sh) script.
+
+## Keycloak (Identity Provider)
+
+As part of cluster preparation during `terraform apply`, Keycloak is deployed to the AKS cluster in each environment. To access the Keycloak admin console, follow the steps below. These steps are needed since we do not have a domain name.
+
+1. Navigate to the Terraform environment for which you want to set up Keycloak console access
 ```sh
-./scripts/prepare-cluster.sh <env>  # Replace <env> with 'dev' or 'prod'
+cd infra/environments/<env>   # Replace <env> with 'dev' or 'prod'
 ```
-
-This script creates namespaces and installs the NGINX Ingress Controller.
+2. Retrieve the Ingress external IP, Keycloak hostname, and admin password
+```sh
+INGRESS_IP=$(terraform output -raw k8s_ingress_ip)
+KEYCLOAK_HOSTNAME=$(terraform output -raw k8s_keycloak_hostname)
+KEYCLOAK_ADMIN_PASSWORD=$(terraform output -raw k8s_keycloak_admin_password)
+```
+3. Add the following entry to your local `/etc/hosts` file (or `/Windows/System32/drivers/etc/hosts`) to map the Keycloak hostname to the Ingress IP
+```<INGRESS_IP>   <KEYCLOAK_HOSTNAME>```
+4. Access the Keycloak admin console in your web browser at `http://<KEYCLOAK_HOSTNAME>/auth/admin/` using the following credentials:
+   - Username: `admin`
+   - Password: `<KEYCLOAK_ADMIN_PASSWORD>`
 
 
 ## Starting and Stopping Services

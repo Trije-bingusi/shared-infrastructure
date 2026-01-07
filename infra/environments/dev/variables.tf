@@ -121,3 +121,8 @@ variable "k8s_keycloak_chart_version" {
   default     = "25.2.0"
 }
 
+variable "k8s_keycloak_hostname" {
+  description = "The hostname for accessing Keycloak via ingress."
+  type        = string
+  default     = "keycloak.local"
+}

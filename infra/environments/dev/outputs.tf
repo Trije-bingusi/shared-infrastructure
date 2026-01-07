@@ -37,3 +37,22 @@ output "gh_subscription_id" {
   description = "The GitHub OIDC subscription ID."
   value       = module.identity_github.subscription_id
 }
+
+output "k8s_ingress_ip" {
+  description = "The public IP address of the NGINX Ingress controller."
+  value = try(
+    data.kubernetes_service_v1.ingress.status[0].load_balancer[0].ingress[0].ip,
+    "Pending IP assignment (rerun apply later)"
+  )
+}
+
+output "k8s_keycloak_hostname" {
+  description = "Hostname for accessing Keycloak via ingress."
+  value       = var.k8s_keycloak_hostname
+}
+
+output "k8s_keycloak_admin_password" {
+  description = "The Keycloak admin password."
+  value       = random_password.keycloak_admin.result
+  sensitive   = true
+}
