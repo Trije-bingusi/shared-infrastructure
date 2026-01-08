@@ -69,7 +69,26 @@ To access the services, you need the public IP address of the NGINX Ingress cont
 
 ## Keycloak (Identity Provider)
 
-As part of cluster preparation during `terraform apply`, Keycloak is deployed to the AKS cluster in each environment. It can be accessed on `https://<ingress-ip>.nip.io/keycloak/`, where `<ingress-ip>` is the public IP address of the NGINX Ingress controller.
+As part of cluster preparation during `terraform apply`, Keycloak is deployed to the AKS cluster in each environment. It can be accessed on `https://<ingress-ip>.nip.io/keycloak/`, where `<ingress-ip>` is the public IP address of the NGINX Ingress controller. The default admin username is `admin`, and the password can be retrieved using:
+```sh
+cd infra/environments/<env>  # Replace <env> with 'dev' or 'prod'
+terraform output k8s_keycloak_admin_password
+```
+
+
+## Monitoring with Prometheus and Grafana
+
+Prometheus and Grafana are deployed to the AKS cluster in each environment for monitoring purposes. You can access Grafana at `https://<ingress-ip>.nip.io/grafana/`, where `<ingress-ip>` is the public IP address of the NGINX Ingress controller. The default admin username is `admin`, and the password can be retrieved using:
+```sh
+cd infra/environments/<env>  # Replace <env> with 'dev' or 'prod'
+terraform output k8s_grafana_password
+```
+
+You can also access the Prometheus UI using `kubectl` port forwarding:
+```sh
+kubectl port-forward -n monitoring svc/monitoring-kube-prometheus-prometheus 9090
+```
+Then open your browser and navigate to [http://localhost:9090](http://localhost:9090). This is especially useful to see which services are being monitored and to verify that custom metrics from your applications are being collected.
 
 
 ## Starting and Stopping Services

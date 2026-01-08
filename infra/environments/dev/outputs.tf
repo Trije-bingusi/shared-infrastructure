@@ -48,3 +48,9 @@ output "k8s_keycloak_admin_password" {
   value       = random_password.keycloak_admin.result
   sensitive   = true
 }
+
+output "k8s_grafana_password" {
+  description = "The Grafana admin password."
+  value       = module.monitoring.grafana_password
+  sensitive   = true
+}

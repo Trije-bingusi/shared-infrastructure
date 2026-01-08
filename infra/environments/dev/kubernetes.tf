@@ -176,15 +176,9 @@ resource "helm_release" "keycloak" {
 module "monitoring" {
   source = "../../modules/k8s/monitoring"
 
-  release_name     = "monitoring"
   namespace        = "monitoring"
   chart_version    = "80.13.2"
-  retention        = "15d"
-  admin_password   = "admin"
-  requests_memory  = "512Mi"
-  requests_cpu     = "200m"
-  limits_memory    = "1Gi"
-  limits_cpu       = "500m"
+  retention        = "7d"
   
   grafana_path = "/grafana"
   grafana_ingress = {
