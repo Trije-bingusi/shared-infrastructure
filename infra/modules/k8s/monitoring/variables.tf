@@ -66,3 +66,14 @@ variable "grafana_ingress" {
   })
   default = null
 }
+
+variable "service_monitor" {
+  description = "Configuration for additional ServiceMonitor to monitor all services in specified namespaces."
+  type = object({
+    namespaces   = list(string)
+    port         = string
+    metrics_path = string
+    interval     = string
+  })
+  default = null
+}

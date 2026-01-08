@@ -7,6 +7,11 @@ terraform {
     kubernetes = {
       source = "hashicorp/kubernetes"
     }
+
+    kubectl = {
+      source = "gavinbunney/kubectl"
+      version = "~> 1.14"
+    }
     
     random = {
       source = "hashicorp/random"
@@ -14,6 +19,18 @@ terraform {
   }
 }
 
+# Generate a random password for Grafana if not provided
+resource "random_password" "grafana" {
+  length           = 16
+  special          = true
+  override_special = "_-!@#"
+}
+
+locals {
+  admin_password = length(var.admin_password) > 0 ? var.admin_password : random_password.grafana.result
+}
+
+# Deploy the full Prometheus stack (including Grafana) using Helm
 resource "helm_release" "prometheus" {
   name       = var.release_name
   namespace  = var.namespace
@@ -36,12 +53,18 @@ resource "helm_release" "prometheus" {
   ]
 }
 
-resource "random_password" "grafana" {
-  length           = 16
-  special          = true
-  override_special = "_-!@#"
-}
+# Optionally, define service monitors to monitor all services in specified
+# namespaces - this is needed for retrieving custom metrics from applications
+# deployed in the cluster.
+resource "kubectl_manifest" "service_monitor" {
+  count = var.service_monitor == null ? 0 : 1
+  override_namespace = var.namespace
 
-locals {
-  admin_password = length(var.admin_password) > 0 ? var.admin_password : random_password.grafana.result
+  yaml_body = templatefile("${path.module}/service-monitor.yaml", {
+    release      = helm_release.prometheus.name
+    namespaces   = var.service_monitor.namespaces
+    port         = var.service_monitor.port
+    metrics_path = var.service_monitor.metrics_path
+    interval     = var.service_monitor.interval
+  })
 }

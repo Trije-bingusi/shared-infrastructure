@@ -191,4 +191,13 @@ module "monitoring" {
     class_name = "nginx"
     host = "${local.k8s_ingress_ip}.nip.io"
   }
+
+  service_monitor = {
+    port = "http"
+    interval = "30s"
+    metrics_path = "/metrics"
+    namespaces = [
+      kubernetes_namespace_v1.microservices.metadata[0].name
+    ]
+  }
 }
