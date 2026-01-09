@@ -1,0 +1,71 @@
+deploymentMode: SingleBinary
+
+loki:
+  auth_enabled: false  # only accessed from inside cluster, auth not needed
+
+  storage:
+    type: filesystem
+
+  commonConfig:
+    replication_factor: 1
+
+  schemaConfig:
+    configs:
+      - from: 2026-01-01
+        store: tsdb
+        object_store: filesystem
+        schema: v13
+        index:
+          prefix: loki_index_
+          period: 24h
+
+  limits_config:
+    retention_period: ${retention}
+
+singleBinary:
+  replicas: 1
+
+  resources:
+    requests:
+      cpu: ${requests_cpu}
+      memory: ${requests_mem}
+    limits:
+      cpu: ${limits_cpu}
+      memory: ${limits_mem}
+
+# We are using the simple SingleBinary mode, so we disable scalable components
+write:
+  replicas: 0
+read:
+  replicas: 0
+backend:
+  replicas: 0
+
+ingester:
+  replicas: 0
+querier:
+  replicas: 0
+queryFrontend:
+  replicas: 0
+queryScheduler:
+  replicas: 0
+distributor:
+  replicas: 0
+compactor:
+  replicas: 0
+indexGateway:
+  replicas: 0
+bloomCompactor:
+  replicas: 0
+bloomGateway:
+  replicas: 0
+
+# Disable chunks and results caches, since they require too much resources
+# for our limited cluster
+chunksCache:
+  enabled: false
+resultsCache:
+  enabled: false
+
+service:
+  type: ClusterIP

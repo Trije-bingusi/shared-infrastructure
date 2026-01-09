@@ -41,6 +41,7 @@ resource "helm_release" "prometheus" {
   create_namespace = true
   values = [
     templatefile("${path.module}/values.yaml", {
+      grafana_additional_data_sources = var.grafana_additional_data_sources
       grafana_path    = var.grafana_path
       ingress         = var.grafana_ingress
       retention       = var.retention

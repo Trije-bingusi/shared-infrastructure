@@ -179,12 +179,22 @@ module "monitoring" {
   namespace        = "monitoring"
   chart_version    = "80.13.2"
   retention        = "7d"
-  
+
   grafana_path = "/grafana"
   grafana_ingress = {
     class_name = "nginx"
     host = "${local.k8s_ingress_ip}.nip.io"
   }
+  
+  grafana_additional_data_sources = [{
+    name = "Loki"
+    type = "loki"
+    url  = module.logging.loki_url
+    json_data = {
+      maxLines = 1000
+      timeout  = 60
+    }
+  }]
 
   service_monitor = {
     port = "http"
@@ -194,4 +204,12 @@ module "monitoring" {
       kubernetes_namespace_v1.microservices.metadata[0].name
     ]
   }
+}
+
+# Logging stack (Loki + Promtail)
+module "logging" {
+  source = "../../modules/k8s/logging"
+
+  namespace = "monitoring"
+  retention = "7d"
 }

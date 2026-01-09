@@ -77,3 +77,16 @@ variable "service_monitor" {
   })
   default = null
 }
+
+variable "grafana_additional_data_sources" {
+  description = "Additional Grafana data sources to configure."
+  type        = list(object({
+    name       = string
+    type       = string
+    url        = string
+    access     = optional(string, "proxy")
+    is_default = optional(bool, false)
+    json_data  = optional(map(any), {})
+  }))
+  default = []
+}

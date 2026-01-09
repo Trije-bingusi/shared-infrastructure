@@ -9,6 +9,24 @@ grafana:
       root_url: "%(protocol)s://%(domain)s${grafana_path}"
       serve_from_sub_path: true
 
+# Optionally add additional data sources to Grafana
+%{ if length(grafana_additional_data_sources) > 0 ~}
+  additionalDataSources:
+%{ for ds in grafana_additional_data_sources ~}
+    - name: ${ds.name}
+      type: ${ds.type}
+      url: ${ds.url}
+      access: ${ds.access}
+      isDefault: ${ds.is_default}
+%{ if length(ds.json_data) > 0 ~}
+      jsonData:
+%{ for k, v in ds.json_data ~}
+        ${k}: ${v}
+%{ endfor ~}
+%{ endif ~}
+%{ endfor ~}
+%{ endif ~}
+
 # Enable ingress only if ingress variable is provided
 %{ if ingress != null ~}
   ingress:
