@@ -84,5 +84,5 @@ variable "identity_github_name" {
 variable "identity_github_repos" {
   description = "List of GitHub repositories that will be allowed to authenticate using the managed identity via OIDC. Must be in the format 'repo:<organization>/<repository>:<ref>'."
   type        = list(string)
-  default = [ ]
+  default     = []
 }

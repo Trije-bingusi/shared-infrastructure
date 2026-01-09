@@ -1,0 +1,19 @@
+# This ServiceMonitor monitors all services in a namespace for Prometheus scraping
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: servicemonitor
+  labels:
+    release: ${release}
+spec:
+  selector: {}
+  namespaceSelector:
+    matchNames:
+%{ for ns in namespaces ~}
+      - ${ns}
+%{ endfor ~}
+      
+  endpoints:
+    - port: ${port}
+      path: ${metrics_path}
+      interval: ${interval}

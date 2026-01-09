@@ -1,0 +1,42 @@
+grafana:
+  enabled: true
+  adminPassword: ${admin_password}
+  service:
+    type: ClusterIP
+
+  grafana.ini:
+    server:
+      root_url: "%(protocol)s://%(domain)s${grafana_path}"
+      serve_from_sub_path: true
+
+# Enable ingress only if ingress variable is provided
+%{ if ingress != null ~}
+  ingress:
+    enabled: true
+    ingressClassName: ${ingress.class_name}
+    path: ${grafana_path}
+    hosts:
+      - ${ingress.host}
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-body-size: 10m
+%{ endif ~}
+
+prometheus:
+  prometheusSpec:
+    retention: ${retention}
+    resources:
+      requests:
+        memory: ${requests_memory}
+        cpu: ${requests_cpu}
+      limits:
+        memory: ${limits_memory}
+        cpu: ${limits_cpu}
+
+alertmanager:
+  enabled: true
+
+kube-state-metrics:
+  enabled: true
+
+nodeExporter:
+  enabled: true

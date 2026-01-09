@@ -27,7 +27,7 @@ resource "azurerm_role_assignment" "this" {
 # Optionally create GitHub OIDC federated identity credential
 resource "azurerm_federated_identity_credential" "gh" {
   for_each = toset(var.github_federated_identity_subjects)
- 
+
   name                = "github-oidc-${replace(each.key, "/[^A-Za-z-]/", "")}"
   resource_group_name = var.resource_group_name
   parent_id           = azurerm_user_assigned_identity.this.id

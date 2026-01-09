@@ -8,7 +8,7 @@ Repository for provisioning infrastructure shared among microservices.
 - [`scripts/`](./scripts/): Contains utility scripts for managing infrastructure.
   - [`init-remote-backend.sh`](./scripts/init-remote-backend.sh): Script to initialize remote state backend for Terraform. Further details are provided in the [Remote State Initialization](#remote-state-initialization) section below.
   - [`manage-services.sh`](./scripts/manage-services.sh): Script to start or stop services (AKS and PostgreSQL Flexible Server), as described in the [Starting and Stopping Services](#starting-and-stopping-services) section.
-  - [`prepare-cluster.sh`](./scripts/prepare-cluster.sh): Script to prepare the AKS cluster for deploying microservices, as detailed in the [Preparing the Kubernetes Cluster](#preparing-the-kubernetes-cluster) section.
+  - [`configure-github-repo.sh`](./scripts/configure-github-repo.sh): Script to create *prod* and *dev* secrets in a GitHub repository for accessing provisioned resources, such as from a CI/CD pipeline.
 - [`infra/`](./infra/): The main directory containing Terraform configuration. It is organized into:
   - [`modules/`](./infra/modules/): Reusable Terraform modules for different resources such as PostgreSQL, ACR, AKS, and Key Vault.
   - [`environments/`](./infra/environments/): Environment-specific Terraform configurations for `shared`, `dev`, and `prod` environments. The `shared` environment provisions the ACR, while `dev` and `prod` environments provision their own AKS clusters, PostgreSQL databases, and Key Vaults.
@@ -47,14 +47,48 @@ terraform plan
 terraform apply
 ```
 
-## Preparing the Kubernetes Cluster
+> The `terraform apply` command also prepares the cluster after provisioning resources. It creates the namespace, sets database secrets, installs the NGINX Ingress controller, and deploys Keycloak using Helm.
 
-After provisioning an AKS cluster, prepare it for deploying microservices by running the [`prepare-cluster.sh`](./scripts/prepare-cluster.sh) script.
+
+## Public Ingress IP Address
+
+To access the services, you need the public IP address of the NGINX Ingress controller deployed in the AKS cluster. You can retrieve this IP address in three ways:
+1. **Terraform Output**: After applying the Terraform configuration for the desired environment, you can get the ingress IP address by running:
+   ```sh
+   cd infra/environments/<env>  # Replace <env> with 'dev' or 'prod'
+   terraform output k8s_ingress_ip
+   ```
+2. **Kubectl Command**: Authenticate to the AKS cluster using *kubectl* and run:
+   ```sh
+   kubectl get svc -n ingress-nginx
+   ```
+   Look for the `EXTERNAL-IP` of the `ingress-nginx-controller` service.
+3. **Azure Portal**: Navigate to the AKS resource in the Azure Portal, go to the "Services and ingresses" section, and find the public IP address associated with the NGINX Ingress controller.
+
+
+
+## Keycloak (Identity Provider)
+
+As part of cluster preparation during `terraform apply`, Keycloak is deployed to the AKS cluster in each environment. It can be accessed on `https://<ingress-ip>.nip.io/keycloak/`, where `<ingress-ip>` is the public IP address of the NGINX Ingress controller. The default admin username is `admin`, and the password can be retrieved using:
 ```sh
-./scripts/prepare-cluster.sh <env>  # Replace <env> with 'dev' or 'prod'
+cd infra/environments/<env>  # Replace <env> with 'dev' or 'prod'
+terraform output k8s_keycloak_admin_password
 ```
 
-This script creates namespaces and installs the NGINX Ingress Controller.
+
+## Monitoring with Prometheus and Grafana
+
+Prometheus and Grafana are deployed to the AKS cluster in each environment for monitoring purposes. You can access Grafana at `https://<ingress-ip>.nip.io/grafana/`, where `<ingress-ip>` is the public IP address of the NGINX Ingress controller. The default admin username is `admin`, and the password can be retrieved using:
+```sh
+cd infra/environments/<env>  # Replace <env> with 'dev' or 'prod'
+terraform output k8s_grafana_password
+```
+
+You can also access the Prometheus UI using `kubectl` port forwarding:
+```sh
+kubectl port-forward -n monitoring svc/monitoring-kube-prometheus-prometheus 9090
+```
+Then open your browser and navigate to [http://localhost:9090](http://localhost:9090). This is especially useful to see which services are being monitored and to verify that custom metrics from your applications are being collected.
 
 
 ## Starting and Stopping Services
