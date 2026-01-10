@@ -29,5 +29,6 @@ identity_github_repos = [
   "repo:Trije-bingusi/svc-gateway:environment:prod",
   "repo:Trije-bingusi/svc-transcription:environment:prod",
   "repo:Trije-bingusi/svc-video:environment:prod",
+  "repo:Trije-bingusi/svc-summary:environment:prod",
   # Add more repositories as needed
 ]
