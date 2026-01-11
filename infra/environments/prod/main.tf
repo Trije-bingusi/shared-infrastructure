@@ -45,6 +45,7 @@ module "keyvault" {
     "pg-admin-password" = module.postgres.administrator_password
     "aks-kube-config"   = module.kubernetes.kube_config
     "aks-name"          = module.kubernetes.name
+    "aks-identity-id"   = module.kubernetes.identity_id
 
     "gh-identity-client-id" = module.identity_github.client_id
     "gh-identity-tenant-id" = module.identity_github.tenant_id

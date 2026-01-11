@@ -14,7 +14,7 @@ pg_location   = "Switzerland North"
 
 # Kubernetes cluster
 aks_name         = "rsobingusiaksdev"
-aks_node_count   = 2
+aks_node_count   = 3
 aks_node_vm_size = "Standard_B2als_v2"
 aks_location     = "Switzerland North"
 
@@ -30,6 +30,8 @@ identity_github_repos = [
   "repo:Trije-bingusi/svc-gateway:environment:dev",
   "repo:Trije-bingusi/svc-transcription:environment:dev",
   "repo:Trije-bingusi/svc-video:environment:dev",
+  "repo:Trije-bingusi/svc-summary:environment:dev",
+  "repo:Trije-bingusi/rso-frontend:environment:dev",
   # Add more repositories as needed
 ]
 

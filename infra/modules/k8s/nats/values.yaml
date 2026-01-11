@@ -1,0 +1,22 @@
+replicaCount: ${replicas}
+
+# JetStream configuration
+jetstream:
+  enabled: ${jetstream ? "true" : "false"}
+  max_mem_store: "1Gb"
+  max_file_store: "5Gb"
+
+# Persistence
+persistence:
+  enabled: ${persistence ? "true" : "false"}
+  storageClass: "standard"
+  size: ${storage_size}
+
+resources:
+  requests:
+    memory: ${memory_request}
+    cpu: ${cpu_request}
+  limits:
+    memory: ${memory_limit}
+    cpu: ${cpu_limit}
+  
