@@ -25,8 +25,3 @@ output "name" {
   description = "The name of the Kubernetes cluster."
   value       = azurerm_kubernetes_cluster.this.name
 }
-
-output "identity_id" {
-  description = "The principal ID of the managed identity assigned to the Kubernetes cluster."
-  value       = azurerm_kubernetes_cluster.this.identity[0].principal_id
-}
