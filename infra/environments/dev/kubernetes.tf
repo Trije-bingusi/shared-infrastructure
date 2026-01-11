@@ -213,3 +213,11 @@ module "logging" {
   namespace = "monitoring"
   retention = "7d"
 }
+
+# Messaging system (NATS)
+module "nats" {
+  source = "../../modules/k8s/nats"
+
+  namespace = "nats"
+  replicas  = 3
+}
